@@ -1,0 +1,45 @@
+comments: |
+  File name: soc_irq.yaml
+  Purpose: Testing SoC schema with undefined IRQ reference.
+  Author: Balasaraswathy B
+soc:
+  name: soc_irq
+  clock:
+    name: clk
+    frequency_hz: 50000000
+  reset:
+    name: resetn
+    active_low: true
+
+cpu:
+  type: picorv32
+  parameters:
+    STACKADDR: 0x00000400
+    ENABLE_MUL: true
+
+bus:
+  type: simple_mem
+  addr_width: 32
+  data_width: 32
+
+memory:
+  - name: sram
+    type: onchip_ram
+    base_addr: 0x00000000
+    size: 0x00000400
+    parameters:
+      word_width: 32
+
+peripherals:
+  - name: uart0
+    type: simpleuart
+    base_addr: 0x02000000
+    size: 0x8
+    irq: unknown_irq       # undefined IRQ
+    parameters:
+      baudrate: 115200
+
+interrupts:
+  width: 32
+  assignments:
+    uart_irq: 4

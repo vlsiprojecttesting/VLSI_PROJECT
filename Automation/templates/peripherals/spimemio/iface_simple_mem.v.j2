@@ -1,0 +1,37 @@
+    {% set resp = p.bus_bindings[p.bus_type].roles.resp -%}
+    {% if resp.ready is defined -%}
+    wire {{ resp.ready }};
+    {% endif -%}
+    {% if resp.rdata is defined -%}
+    wire [31:0] {{ resp.rdata }};
+    {% endif -%}
+    {% for reg_name, reg_addr in p.parameters.get("registers", {}).items() -%}
+    wire {{ p.name }}_{{ reg_name }}_sel = mem_valid && (mem_addr == 32'h{{ "%08x"|format(p.region.base_addr) }});
+    wire [31:0] {{ p.name }}_{{ reg_name }}_do;
+    {% endfor -%}
+
+    spimemio {{ p.name }} (
+    .clk        (clk),
+    .resetn     (resetn),
+
+    .flash_csb  (flash_csb),
+    .flash_clk  (flash_clk),
+
+    .flash_io0_oe (flash_io0_oe),
+    .flash_io1_oe (flash_io1_oe),
+    .flash_io2_oe (flash_io2_oe),
+    .flash_io3_oe (flash_io3_oe),
+
+    .flash_io0_do (flash_io0_do),
+    .flash_io1_do (flash_io1_do),
+    .flash_io2_do (flash_io2_do),
+    .flash_io3_do (flash_io3_do),
+
+    .flash_io0_di (flash_io0_di),
+    .flash_io1_di (flash_io1_di),
+    .flash_io2_di (flash_io2_di),
+    .flash_io3_di (flash_io3_di),
+
+    .cfgreg_sel  ({{ p.name }}_cfgreg_sel),
+    .cfgreg_do   ({{ p.name }}_cfgreg_do)
+);

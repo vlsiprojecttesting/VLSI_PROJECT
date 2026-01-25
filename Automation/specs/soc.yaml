@@ -1,0 +1,74 @@
+comments: |
+  This is a YAML specification for a PicoSoC system-on-chip (SoC) configuration.
+  It defines the CPU, bus, memory, peripherals, and interrupt assignments.
+  To add a peripheral or modify parameters, update the relevant sections accordingly.
+  Pleae ensure that all addresses and sizes are aligned properly.
+  Author: Balasaraswathy B
+soc:
+  name: picogen
+  clock:
+    name: clk
+    frequency_hz: 50000000
+  reset:
+    name: resetn
+    active_low: true
+
+cpu:
+  type: picorv32
+  parameters:
+    STACKADDR: 0x00000400
+    PROGADDR_RESET: 0x00100000
+    PROGADDR_IRQ: 0x00000000
+    BARREL_SHIFTER: true
+    ENABLE_MUL: true
+    ENABLE_DIV: true
+    ENABLE_FAST_MUL: false
+    ENABLE_COMPRESSED: true
+    ENABLE_COUNTERS: true
+    ENABLE_IRQ: true
+    ENABLE_IRQ_QREGS: false
+
+bus:
+  type: simple_mem
+  addr_width: 32
+  data_width: 32
+
+memory:
+  - name: sram
+    type: onchip_ram
+    base_addr: 0x00000000
+    size: 0x00000400
+    parameters:
+      word_width: 32
+
+peripherals:
+  - name: spimemio
+    type: spimemio
+    base_addr: 0x02000000
+    size: 0x00000003
+    bus: simple_mem
+    parameters: {}
+
+  - name: uart0
+    type: simpleuart
+    base_addr: 0x02000004
+    size: 0x00000004
+    bus: simple_mem
+    irq: uart_irq
+    parameters:
+      baudrate: 115200
+  - name: fft0
+    type: fft_accel
+    base_addr: 0x03000000
+    size: 0x00000200
+    bus: simple_mem
+    irq: fft_irq
+    parameters: {}
+interrupts:
+  width: 32
+  assignments:
+    uart_irq: 4
+    irq_5: 5
+    irq_6: 6
+    irq_7: 7
+    fft_irq: 8

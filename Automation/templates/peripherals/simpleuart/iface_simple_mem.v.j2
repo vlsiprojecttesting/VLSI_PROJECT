@@ -1,0 +1,24 @@
+    
+    wire {{ p.name }}_reg_div_sel = mem_valid && (mem_addr == 32'h{{ "%08x"|format(p.region.base_addr) }});
+    wire [31:0] {{ p.name }}_reg_div_do;
+    wire {{ p.name }}_reg_dat_sel = mem_valid && (mem_addr == 32'h{{ "%08x"|format(p.region.base_addr + p.region.size) }});
+    wire [31:0] {{ p.name }}_reg_dat_do;
+    wire {{ p.name }}_reg_dat_wait;
+
+    simpleuart {{ p.name }} (
+    .clk(clk),
+    .resetn(resetn),
+
+    .ser_tx(ser_tx),
+    .ser_rx(ser_rx),
+
+    .reg_div_we({{ p.name }}_reg_div_sel ? mem_wstrb : 4'b0),
+    .reg_div_di(mem_wdata),
+    .reg_div_do({{ p.name }}_reg_div_do),
+
+    .reg_dat_we({{ p.name }}_reg_dat_sel ? mem_wstrb[0] : 1'b0),
+    .reg_dat_re({{ p.name }}_reg_dat_sel && !mem_wstrb),
+    .reg_dat_di(mem_wdata),
+    .reg_dat_do({{ p.name }}_reg_dat_do),
+    .reg_dat_wait({{ p.name }}_reg_dat_wait)
+);

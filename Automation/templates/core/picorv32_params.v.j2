@@ -1,0 +1,20 @@
+    // -------------------------------------------------
+    // PicoRV32 Core Parameters
+    // -------------------------------------------------
+
+    // -------- CPU feature enables --------
+    parameter [0:0] BARREL_SHIFTER    = {{ 1 if soc.cpu.parameters.get("BARREL_SHIFTER", true) else 0 }};
+    parameter [0:0] ENABLE_MUL        = {{ 1 if soc.cpu.parameters.get("ENABLE_MUL", true) else 0 }};
+    parameter [0:0] ENABLE_DIV        = {{ 1 if soc.cpu.parameters.get("ENABLE_DIV", true) else 0 }};
+    parameter [0:0] ENABLE_FAST_MUL   = {{ 1 if soc.cpu.parameters.get("ENABLE_FAST_MUL", false) else 0 }};
+    parameter [0:0] ENABLE_COMPRESSED = {{ 1 if soc.cpu.parameters.get("ENABLE_COMPRESSED", true) else 0 }};
+    parameter [0:0] ENABLE_COUNTERS   = {{ 1 if soc.cpu.parameters.get("ENABLE_COUNTERS", true) else 0 }};
+    parameter [0:0] ENABLE_IRQ_QREGS  = {{ 1 if soc.cpu.parameters.get("ENABLE_IRQ_QREGS", false) else 0 }};
+
+    // -------- Memory configuration --------
+    parameter integer MEM_WORDS = {{ soc.cpu.parameters.get("MEM_WORDS", 256) }};
+
+    // -------- Address parameters --------
+    parameter [31:0] STACKADDR      = (4*MEM_WORDS);  // end of memory
+    parameter [31:0] PROGADDR_RESET = 32'h{{ "%08x"|format(soc.cpu.parameters.PROGADDR_RESET) }};
+    parameter [31:0] PROGADDR_IRQ   = 32'h{{ "%08x"|format(soc.cpu.parameters.PROGADDR_IRQ) }};

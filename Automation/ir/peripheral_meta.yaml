@@ -1,0 +1,62 @@
+comments: |
+  File name: peripheral_meta.yaml
+  Description:This file defines the metadata for various peripherals used in the SoC.
+  Each peripheral specifies its supported buses, top-level ports, and parameters.
+  Modify or add peripherals as needed for your SoC design.
+  Author: Balasaraswathy B
+simpleuart:
+  supported_buses:
+    simple_mem:
+      adapter: simple_mem_adapter
+      roles:
+        req: { valid: "mem_valid", addr: "mem_addr", wdata: "mem_wdata", wstrb: "mem_wstrb" }
+  top_ports:
+    ser_tx: { dir: output }
+    ser_rx: { dir: input }
+  parameters:
+    registers:
+      reg_div:
+        
+        wait: false
+      reg_dat:
+        
+        wait: true
+spimemio:
+  supported_buses:
+    simple_mem:
+      adapter: simple_mem_adapter
+      roles:
+        req: { valid: "mem_valid", addr: "mem_addr", wdata: "mem_wdata", wstrb: "mem_wstrb" }
+        resp: { ready: "spimem_ready", rdata: "spimem_rdata" }
+  parameters:
+    registers:
+      cfgreg :   
+  top_ports:
+    flash_csb: { dir: output }
+    flash_clk: { dir: output }
+    flash_io0_oe: { dir: output }
+    flash_io1_oe: { dir: output }
+    flash_io2_oe: { dir: output }
+    flash_io3_oe: { dir: output }
+    flash_io0_do: { dir: output }
+    flash_io1_do: { dir: output }
+    flash_io2_do: { dir: output }
+    flash_io3_do: { dir: output }
+    flash_io0_di: { dir: input }
+    flash_io1_di: { dir: input }
+    flash_io2_di: { dir: input }
+    flash_io3_di: { dir: input }
+
+fft_accel:
+  supported_buses:
+    simple_mem:
+      adapter: simple_mem_adapter
+      roles:
+        req: { valid: "mem_valid", addr: "mem_addr", wdata: "mem_wdata", wstrb: "mem_wstrb" }
+        resp: { ready: "fft_ready", rdata: "fft_rdata" }
+  parameters:
+    registers:
+      fft:
+        wait: false
+  top_ports:
+    irq: { dir: output }

@@ -1,0 +1,26 @@
+comments: |
+  File name: soc_invalid_schema.yaml
+  Purpose: Testing invalid SoC schema for error handling.
+  Author: Balasaraswathy B
+soc:
+  name: broken_soc
+  reset:
+    name: resetn
+    active_low: true
+
+cpu:
+  type: picorv32
+  parameters:
+    STACKADDR: 0x00000400
+    ENABLE_MUL: true
+
+bus:
+  type: simple_mem
+  addr_width: 32
+  data_width: 32
+
+memory: []
+peripherals: []
+interrupts:
+  width: 32
+  assignments: {}

@@ -1,0 +1,26 @@
+    
+    {% set resp = p.bus_bindings[p.bus_type].roles.resp -%}
+    {% if resp.ready is defined -%}
+    wire {{ resp.ready }};
+    {% endif -%}
+    {% if resp.rdata is defined -%}
+    wire [31:0] {{ resp.rdata }};
+    {% endif -%}
+
+    wire {{ p.name }}_sel = mem_valid && 
+                        (mem_addr >= 32'h{{ "%08x"|format(p.region.base_addr) }} &&
+                         mem_addr < 32'h{{ "%08x"|format(p.region.base_addr + p.region.size) }});
+
+    fft_accel {{ p.name }} (
+    .clk     (clk),
+    .resetn  (resetn),
+    .valid   ({{ p.name }}_sel),
+    .mem_addr(mem_addr),
+    .wstrb   (mem_wstrb),
+    .wdata   (mem_wdata),
+    .rdata   ({{ p.bus_bindings.simple_mem.roles.resp.rdata if p.bus_bindings.simple_mem.roles.resp.rdata is defined else "/*rdata*/" }}),
+    .ready   ({{ p.bus_bindings.simple_mem.roles.resp.ready if p.bus_bindings.simple_mem.roles.resp.ready is defined else "/*ready*/" }}),
+    {% if p.irq is defined %}
+    .irq_out ({{ p.irq }})
+    {% endif %}
+);
