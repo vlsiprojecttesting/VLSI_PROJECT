@@ -31,11 +31,15 @@ module {{ soc.name }} (
     {% for irq_name, irq_num in soc.interrupts.assignments.items() -%}
         input {{ irq_name }},{% if not loop.last %}{% endif %}
     {% endfor %}
-    {% for p in soc.peripherals -%}
-    {% for port_name, port_info in p.top_ports.items() -%}
-            {{ port_info.dir }} {{ port_name }},{% if not loop.last %}{% endif %}
-    {% endfor -%}
-    {% endfor -%}
+{%- set all_ports = [] -%}
+
+{%- for p in soc.peripherals -%}
+{%- for port_name, port_info in p.top_ports.items() -%}
+{%- set _ = all_ports.append('\t' ~ port_info.dir ~ ' ' ~ port_name) -%}
+{%- endfor -%}
+{%- endfor -%}
+
+{{ all_ports | join(',\n') }}
 
 
 );
@@ -43,7 +47,8 @@ module {{ soc.name }} (
 
     reg [31:0] irq;
     wire irq_stall = 0;
-
+    reg ram_ready;
+	wire [31:0] ram_rdata;
     always @* begin
         irq = 0;
         irq[3] = irq_stall;

@@ -54,9 +54,5 @@ fft_accel:
       roles:
         req: { valid: "mem_valid", addr: "mem_addr", wdata: "mem_wdata", wstrb: "mem_wstrb" }
         resp: { ready: "fft_ready", rdata: "fft_rdata" }
-  parameters:
-    registers:
-      fft:
-        wait: false
-  top_ports:
-    irq: { dir: output }
+  parameters: {}
+

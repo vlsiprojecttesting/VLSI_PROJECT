@@ -10,12 +10,25 @@
     wire [31:0] {{ p.name }}_{{ reg_name }}_do;
     {% endfor -%}
 
-    spimemio {{ p.name }} (
-    .clk        (clk),
-    .resetn     (resetn),
+   {% set resp = p.bus_bindings[p.bus_type].roles.resp -%}
 
-    .flash_csb  (flash_csb),
-    .flash_clk  (flash_clk),
+    spimemio {{ p.name }} (
+    .clk    (clk),
+    .resetn (resetn),
+    .valid  (mem_valid && mem_addr >= 4*MEM_WORDS && mem_addr < 32'h{{ "%08x"|format(p.region.base_addr) }}),
+
+    {% if resp.ready is defined %}
+    .ready  ({{ resp.ready }}),
+    {% endif %}
+
+    .addr   (mem_addr[23:0]),
+
+    {% if resp.rdata is defined %}
+    .rdata  ({{ resp.rdata }}),
+    {% endif %}
+
+    .flash_csb    (flash_csb),
+    .flash_clk    (flash_clk),
 
     .flash_io0_oe (flash_io0_oe),
     .flash_io1_oe (flash_io1_oe),
@@ -32,6 +45,7 @@
     .flash_io2_di (flash_io2_di),
     .flash_io3_di (flash_io3_di),
 
-    .cfgreg_sel  ({{ p.name }}_cfgreg_sel),
-    .cfgreg_do   ({{ p.name }}_cfgreg_do)
+    .cfgreg_we({{ p.name }}_cfgreg_sel ? mem_wstrb : 4'b0000),
+    .cfgreg_di(mem_wdata),
+    .cfgreg_do({{ p.name }}_cfgreg_do)
 );
