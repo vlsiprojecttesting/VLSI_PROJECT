@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["soc", "cpu", "bus", "memory", "peripherals", "interrupts"],
+  "properties": {
+    "soc": {
+      "type": "object",
+      "required": ["name", "clock", "reset"],
+      "properties": {
+        "name": { "type": "string" },
+        "clock": {
+          "type": "object",
+          "required": ["name", "frequency_hz"],
+          "properties": {
+            "name": { "type": "string" },
+            "frequency_hz": { "type": "integer" }
+          }
+        },
+        "reset": {
+          "type": "object",
+          "required": ["name", "active_low"],
+          "properties": {
+            "name": { "type": "string" },
+            "active_low": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "cpu": {
+      "type": "object",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": { "type": "string" },
+        "parameters": { "type": "object" }
+      }
+    },
+    "bus": {
+      "type": "object",
+      "required": ["type", "addr_width", "data_width"],
+      "properties": {
+        "type": { "type": "string" },
+        "addr_width": { "type": "integer" },
+        "data_width": { "type": "integer" }
+      }
+    },
+    "memory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "base_addr", "size", "parameters"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "base_addr": { "type": "integer" },
+          "size": { "type": "integer" },
+          "parameters": { "type": "object" }
+        }
+      }
+    },
+    "peripherals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "base_addr", "size", "parameters"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "base_addr": { "type": "integer" },
+          "size": { "type": "integer" },
+          "irq": { "type": ["string", "null"] },
+          "parameters": { "type": "object" }
+        }
+      }
+    },
+    "interrupts": {
+      "type": "object",
+      "required": ["width", "assignments"],
+      "properties": {
+        "width": { "type": "integer" },
+        "assignments": {
+          "type": "object",
+          "patternProperties": { ".*": { "type": "integer" } }
+        }
+      }
+    }
+  }
+}
