@@ -127,8 +127,8 @@ def load_yaml(path):
 
 if __name__ == "__main__":
 
-    print("\n===== SoC Automation Flow Started =====\n")
-
+    print("\n=====>>>> SoC Automation Flow Started <<<<=====\n")
+    print("\n=====>>>> Schema Validation Started   <<<<======\n")
     # ------------------------------------------------------
     # Stage 1: Schema Validation
     # ------------------------------------------------------
@@ -138,18 +138,24 @@ if __name__ == "__main__":
     # 
     # ------------------------------------------------------
     validate_yaml_schema(yaml_dict, SCHEMA_PATH)
-
+	
+    print("\n=====>>>> Schema Validation Successful   <<<<======\n")
     # ------------------------------------------------------
     # Stage 2: Build IR
+    
     # ------------------------------------------------------
+    print("\n======>>>> Peripheral_meta data collection in progress.......... \n")
+    print("\n======>>>> Building IR.......... \n")
     soc_ir = build_soc_ir(
         SPEC_PATH,
         peripheral_meta_path="ir/peripheral_meta.yaml"
     )
-
+    print("\n====== Completed ======\n")
+    
     # ------------------------------------------------------
     # Stage 3: Semantic Validation
     # ------------------------------------------------------
+    print("\n======>>>> Semantic IR validation Started <<<<======\n")
     validate_soc_ir(soc_ir)
 
     print("✔ IR VALID AND READY")
@@ -159,8 +165,8 @@ if __name__ == "__main__":
     # ------------------------------------------------------
     ir_dict = to_serializable(soc_ir)
 
-    print("\n======= EXPANDED IR =======\n")
-    pprint(ir_dict, width=120)
+    print("\n=======>>>> EXPANDED IR <<<<=======\n")
+    #pprint(ir_dict, width=120)
 
     json_path = os.path.join(OUTPUT_DIR, "soc_ir_dump.json")
     yaml_path = os.path.join(OUTPUT_DIR, "soc_ir_dump.yaml")
