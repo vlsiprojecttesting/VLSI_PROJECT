@@ -1,0 +1,33 @@
+UART:
+  top: simpleuart
+  rtl:
+    - UART/simpleuart.v
+
+SPI:
+  top: spimemio
+  rtl:
+    - SPI/spimemio.v
+    - SPI/spiflash.v
+    - SPI/ice40up5k_spram.v
+
+CORE:
+  top: picorv32
+  rtl:
+    - CORE/picorv32.v
+
+SoC:
+  top: picosoc
+  rtl:
+    - SoC/picosoc.v
+
+FFT:
+  top: fft_accel
+  rtl:
+    - FFT/fft_accel.v
+    - FFT/FFT64.v
+    - FFT/Butterfly.v
+    - FFT/Multiply.v
+    - FFT/Twiddle64.v
+    - FFT/DelayBuffer.v
+    - FFT/SdfUnit.v
+
